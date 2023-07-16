@@ -1,36 +1,64 @@
 package main
 
 import (
-    "image/color"
-
-    "fyne.io/fyne/v2/layout"
-    "fyne.io/fyne/v2/app"
-    "fyne.io/fyne/v2/canvas"
-    "fyne.io/fyne/v2/container"
-    "fyne.io/fyne/v2/widget"
+    "math/rand"
+    "fmt"
+    "time"
 )
 
-func main() {
-    const ROWS = 20
-    const COLUMNS = 20
+const (
+    DEAD = " \033[91mx\033[0m"
+    ALIVE = " \033[92mx\033[0m"
 
-    app := app.New()
-    window := app.NewWindow("Game of life")
+    ROWS = 20
+    COLUMNS = 20
+)
 
-    window.SetContent(widget.NewLabel("Game of Life"))
-
-    var boxes [COLUMNS][ROWS]*canvas.Rectangle
-    grid := container.New(layout.NewGridLayout(COLUMNS))
-
+func initializeBoard() [ROWS][COLUMNS]string {
+    var cells [ROWS][COLUMNS]string
     for i := 0; i < ROWS; i++ {
         for j := 0; j < COLUMNS; j++ {
-	    currentBox := canvas.NewRectangle(color.White)
-	    boxes[j][i] = currentBox
-	    grid.Add(currentBox)
+	    random := rand.Intn(10)
+	    if random == 1 { 
+		cells[j][i] = ALIVE 
+	    } else { 
+		cells[j][i] = DEAD 
+	    }
         }
     }
 
-    window.SetContent(grid)
+    return cells
+}
 
-    window.ShowAndRun()
+func drawBoard(cells [ROWS][COLUMNS]string) {
+    for i := 0; i < ROWS; i++ {
+        for j := 0; j < COLUMNS; j++ {
+	    fmt.Printf(cells[j][i])
+        }
+	fmt.Printf("\n")
+    }
+}
+
+func updateBoard(cells [ROWS][COLUMNS]string) [ROWS][COLUMNS]string {
+    for i := 0; i < ROWS; i++ {
+	for j := 0; j < COLUMNS; j++ {
+
+	}
+    }
+    return cells
+}
+
+func main() {
+    var cells = initializeBoard()
+
+    drawBoard(cells)
+
+    for true {
+	time.Sleep(time.Second)
+	// Clear terminal
+	fmt.Print("\033[H\033[2J")
+
+	cells = updateBoard(cells)
+	drawBoard(cells)
+    }
 }
